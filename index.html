@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARRO Charity Fun Run 2026 — Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15130f;
+    --paper:#f6f2ea;
+    --carro-orange:#ff5a1f;
+    --carro-orange-dark:#e14812;
+    --line: rgba(21,19,15,0.12);
+    --green:#1f7a4d;
+    --amber:#b8790a;
+    --card:#ffffff;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:0.01em; margin:0; }
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .hide{display:none !important;}
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:rgba(246,242,234,0.92);backdrop-filter:blur(6px);
+    z-index:20;
+  }
+  .logo{font-family:'Archivo Black',sans-serif;font-size:22px;letter-spacing:0.02em;}
+  .logo span{color:var(--carro-orange);}
+  .step-track{display:flex;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a8477;}
+  .step-track .dot{width:6px;height:6px;border-radius:50%;background:var(--line);margin:auto 2px;}
+  .step-track .on{color:var(--carro-orange-dark);}
+
+  /* ---------- LANDING HERO ---------- */
+  .hero{
+    background:var(--ink);color:var(--paper);
+    padding:64px 0 0 0;position:relative;overflow:hidden;
+  }
+  .hero-inner{display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;padding:0 24px 56px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    color:var(--carro-orange);font-weight:800;font-size:12px;letter-spacing:0.14em;
+    border:1px solid rgba(255,90,31,0.5);padding:6px 12px;border-radius:100px;margin-bottom:20px;
+  }
+  .hero h1{font-size:52px;line-height:1.02;}
+  .hero h1 .accent{color:var(--carro-orange);}
+  .hero p.sub{font-size:16px;line-height:1.6;color:#cfc9ba;max-width:46ch;margin:20px 0 28px;}
+  .meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:28px;font-size:13px;color:#cfc9ba;}
+  .meta-row div{display:flex;align-items:center;gap:8px;}
+  .meta-row b{color:var(--paper);}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:800;font-size:14px;letter-spacing:0.02em;
+    padding:15px 26px;border-radius:8px;border:none;cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{background:var(--carro-orange);color:#fff;box-shadow:0 8px 20px -8px rgba(255,90,31,0.7);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 24px -8px rgba(255,90,31,0.8);}
+  .btn-ghost{background:transparent;color:var(--paper);border:1px solid rgba(246,242,234,0.35);}
+  .btn-block{width:100%;justify-content:center;}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+  .impact-card{
+    background:linear-gradient(180deg,#1c1a15,#100f0c);border:1px solid rgba(255,90,31,0.25);
+    border-radius:var(--radius);padding:26px;
+  }
+  .impact-card .row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dashed rgba(246,242,234,0.15);}
+  .impact-card .row:last-child{border-bottom:none;}
+  .impact-card .num{font-family:'Archivo Black',sans-serif;color:var(--carro-orange);font-size:22px;}
+  .impact-card .lbl{font-size:11px;color:#a8a294;text-transform:uppercase;letter-spacing:0.08em;}
+  .impact-total{margin-top:14px;background:var(--carro-orange);border-radius:10px;padding:16px;text-align:center;}
+  .impact-total .num{color:#fff;font-size:28px;}
+  .impact-total .lbl{color:rgba(255,255,255,0.85);}
+
+  /* pillars */
+  .pillars{background:var(--ink);padding:0 0 64px;}
+  .pillars-inner{max-width:1080px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .pillar{background:#1c1a15;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:22px;color:var(--paper);}
+  .pillar .n{font-family:'Archivo Black';color:var(--carro-orange);font-size:13px;margin-bottom:10px;}
+  .pillar h3{font-size:15px;margin-bottom:8px;text-transform:none;}
+  .pillar p{font-size:13px;color:#b7b1a3;line-height:1.55;margin:0;}
+
+  /* ---------- SECTION SHELL ---------- */
+  section.panel{padding:56px 0;}
+  .panel-head{margin-bottom:28px;}
+  .panel-head .kicker{color:var(--carro-orange-dark);font-weight:800;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+  .panel-head h2{font-size:28px;}
+  .panel-head p{color:#5b5648;font-size:14px;margin-top:8px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;}
+
+  /* form */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+  .field label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#5b5648;}
+  .field input, .field select, .field textarea{
+    font-family:'Inter';font-size:14px;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;
+    background:#fff;color:var(--ink);outline:none;transition:border-color .15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--carro-orange);}
+  .field .err{font-size:11px;color:#c23b1f;min-height:14px;}
+  .field.invalid input, .field.invalid select{border-color:#c23b1f;}
+  .tshirt-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .tshirt-opt{
+    border:1.5px solid var(--line);border-radius:8px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;background:#fff;
+  }
+  .tshirt-opt.sel{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .checkline{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#5b5648;margin:18px 0;}
+  .checkline a{color:var(--carro-orange-dark);text-decoration:underline;}
+
+  /* payment */
+  .pay-summary{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:18px;}
+  .pay-summary .amt{font-family:'Archivo Black';font-size:32px;color:var(--carro-orange-dark);}
+  .badge{display:inline-block;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;}
+  .badge-amber{background:#fbe9cf;color:var(--amber);}
+  .badge-green{background:#dcf1e3;color:var(--green);}
+  .pay-method{border:1.5px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px;}
+  .qr-box{background:#faf8f3;border:1px dashed var(--line);border-radius:10px;padding:22px;text-align:center;}
+  .qr-box img{width:180px;height:180px;border-radius:6px;background:#fff;padding:8px;border:1px solid var(--line);}
+  .upload-row{display:flex;align-items:center;gap:12px;margin-top:14px;}
+  .upload-row input[type=file]{font-size:13px;}
+
+  /* confirmation */
+  .confirm-card{text-align:center;padding:48px 32px;}
+  .confirm-icon{width:64px;height:64px;border-radius:50%;background:#dcf1e3;color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;}
+  .reg-id{font-family:'Archivo Black';font-size:22px;letter-spacing:0.04em;color:var(--carro-orange-dark);margin:14px 0;}
+  .detail-table{text-align:left;max-width:420px;margin:24px auto 0;border-top:1px solid var(--line);}
+  .detail-table div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .detail-table b{font-weight:700;}
+
+  .foot{background:var(--ink);color:#a8a294;text-align:center;padding:28px 24px;font-size:12px;}
+  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  @media(max-width:820px){
+    .hero-inner{grid-template-columns:1fr;}
+    .hero h1{font-size:36px;}
+    .pillars-inner{grid-template-columns:1fr;}
+    .grid2{grid-template-columns:1fr;}
+    .step-track{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">CARRO<span>.</span> Fun Run</div>
+  <div class="step-track" id="stepTrack">
+    <span data-step="landing" class="on">Event</span><span class="dot">•</span>
+    <span data-step="register">Register</span><span class="dot">•</span>
+    <span data-step="payment">Pay</span><span class="dot">•</span>
+    <span data-step="confirm">Confirmed</span>
+  </div>
+</div>
+
+<!-- ============ SCREEN 1: LANDING ============ -->
+<div id="screen-landing">
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">● CARRO CHARITY FUN RUN 2026</div>
+        <h1>RUN FOR A CAUSE.<br>EVERY STEP <span class="accent">CREATES IMPACT.</span></h1>
+        <p class="sub">A 5KM fun run supporting Breast Cancer initiatives and OKU empowerment programs. Together, we run. Together, we create change.</p>
+        <div class="meta-row">
+          <div>📅 <b>14 Nov 2026 (Sat)</b></div>
+          <div>⏰ <b>7:00 AM – 11:00 AM</b></div>
+          <div>📍 <b>Putrajaya</b></div>
+        </div>
+        <div class="cta-row">
+          <button class="btn btn-primary" onclick="goTo('register')">Register Now →</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('pillars').scrollIntoView({behavior:'smooth'})">How it works</button>
+        </div>
+      </div>
+      <div class="impact-card">
+        <div class="row"><span class="lbl">The entry ticket<br>RM50 per person</span><span class="num">100% → charity</span></div>
+        <div class="row"><span class="lbl">Raised by staff &amp; families</span><span class="num">RM 25,000</span></div>
+        <div class="row"><span class="lbl">CARRO corporate match</span><span class="num">RM 25,000</span></div>
+        <div class="impact-total">
+          <div class="num">RM 50,000</div>
+          <div class="lbl">Total projected impact</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pillars" id="pillars">
+    <div class="pillars-inner">
+      <div class="pillar">
+        <div class="n">01</div>
+        <h3>The Entry Ticket</h3>
+        <p>RM50 per person. 100% of every registration fee goes directly to the charity fund — nothing is deducted for admin costs.</p>
+      </div>
+      <div class="pillar">
+        <div class="n">02</div>
+        <h3>The 1-to-1 Corporate Match</h3>
+        <p>If 500 staff &amp; families raise RM25,000 together, CARRO Corporate matches it dollar-for-dollar with another RM25,000.</p>
+      </div>
+      <div class="pillar">
+        <div class="n">03</div>
+        <h3>The Hope Booths</h3>
+        <p>At the finish line: a Breast Cancer NGO booth and an OKU NGO booth selling cookies, crafts &amp; merchandise — funds go straight into their hands.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SCREEN 2: REGISTRATION ============ -->
+<div id="screen-register" class="hide">
+  <section class="panel wrap">
+    <div class="panel-head">
+      <div class="kicker">Step 1 of 3</div>
+      <h2>Participant Registration</h2>
+      <p>Please fill in your details accurately — this is what appears on your race bib and confirmation email.</p>
+    </div>
+    <div class="card">
+      <form id="regForm" novalidate>
+        <div class="grid2">
+          <div class="field" data-f="fullName">
+            <label>Full Name *</label>
+            <input type="text" name="fullName" placeholder="As per IC" required>
+            <div class="err"></div>
+          </div>
+          <div class="field" data-f="age">
+            <label>Age *</label>
+            <input type="number" name="age" min="12" max="99" placeholder="Enter your age" required>
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field" data-f="icNumber">
+            <label>IC Number *</label>
+            <input type="text" name="icNumber" placeholder="e.g. 930101-01-1234" required>
+            <div class="err"></div>
+          </div>
+          <div class="field" data-f="email">
+            <label>Gmail (Email) *</label>
+            <input type="email" name="email" placeholder="you@gmail.com" required>
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field" data-f="contactNumber">
+            <label>Contact Number *</label>
+            <input type="tel" name="contactNumber" placeholder="012-3456789" required>
+            <div class="err"></div>
+          </div>
+          <div class="field" data-f="emergencyName">
+            <label>Emergency Contact Name *</label>
+            <input type="text" name="emergencyName" placeholder="Enter emergency contact name" required>
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field" data-f="emergencyNumber">
+            <label>Emergency Contact Number *</label>
+            <input type="tel" name="emergencyNumber" placeholder="Enter emergency contact number" required>
+            <div class="err"></div>
+          </div>
+          <div class="field" data-f="hasCondition">
+            <label>Do you have any medical condition / disease?</label>
+            <select name="hasCondition">
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+            </select>
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="field" id="conditionDetailField" style="display:none;">
+          <label>If yes, please specify</label>
+          <input type="text" name="conditionDetail" placeholder="Please specify (if any)">
+        </div>
+
+        <div class="field">
+          <label>T-Shirt Size *</label>
+          <div class="tshirt-row" id="tshirtRow">
+            <div class="tshirt-opt" data-size="XS">XS</div>
+            <div class="tshirt-opt" data-size="S">S</div>
+            <div class="tshirt-opt sel" data-size="M">M</div>
+            <div class="tshirt-opt" data-size="L">L</div>
+            <div class="tshirt-opt" data-size="XL">XL</div>
+            <div class="tshirt-opt" data-size="XXL">XXL</div>
+          </div>
+        </div>
+
+        <label class="checkline">
+          <input type="checkbox" id="agreeTerms" required>
+          <span>I have read and agree to the <a href="#" onclick="return false;">Terms &amp; Conditions</a> and <a href="#" onclick="return false;">Privacy Policy</a>.</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block" id="continueBtn">Continue to Payment →</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SCREEN 3: PAYMENT ============ -->
+<div id="screen-payment" class="hide">
+  <section class="panel wrap">
+    <div class="panel-head">
+      <div class="kicker">Step 2 of 3</div>
+      <h2>Payment</h2>
+      <p>Carro Charity Fun Run 2026 · Registration Fee</p>
+    </div>
+    <div class="card" style="max-width:520px;">
+      <div class="pay-summary">
+        <div>
+          <div style="font-size:12px;color:#8a8477;">Registration ID</div>
+          <div style="font-weight:700;" id="payRegId">—</div>
+        </div>
+        <div class="amt">RM50.00</div>
+      </div>
+
+      <!-- BILLPLZ payment -->
+      <div id="billplzPay">
+        <p style="font-size:13px;color:#5b5648;margin-bottom:16px;">Select a payment method — secured by Billplz.</p>
+        <div class="pay-method">💳 FPX – Online Banking</div>
+        <div class="pay-method">💳 Credit / Debit Card</div>
+        <div class="pay-method">💳 e-Wallet</div>
+        <div class="pay-method">💳 QR Payment</div>
+        <button class="btn btn-primary btn-block" onclick="submitBillplzPayment()" id="billplzSubmitBtn">Pay RM50.00</button>
+        <div style="text-align:center;font-size:11px;color:#8a8477;margin-top:10px;">Secured by Billplz</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SCREEN 4: CONFIRMATION ============ -->
+<div id="screen-confirm" class="hide">
+  <section class="panel wrap">
+    <div class="card confirm-card" style="max-width:520px;margin:0 auto;">
+      <div class="confirm-icon">✓</div>
+      <h2 style="font-size:22px;">Registration Received!</h2>
+      <p style="color:#5b5648;font-size:13px;margin-top:10px;" id="confirmSub">A confirmation email with your QR code is on its way.</p>
+      <div class="reg-id" id="confirmRegId">CFR2026000000</div>
+      <div class="detail-table" id="confirmDetails"></div>
+      <p style="font-size:12px;color:#8a8477;margin-top:22px;">Please check your inbox (and spam folder). Show your QR code at event check-in.</p>
+    </div>
+  </section>
+</div>
+
+<div class="foot">EVERY STEP CREATES IMPACT · #RunForImpact · runforimpact@carro.com</div>
+
+<script>
+/* =========================================================
+   CONFIG — edit these two lines when you deploy
+   ========================================================= */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKRjz6YmIS0ygk812GRi4bXyMzJtZN419bOZx6lJ1G2763Es3g1f7UxpQKk04e42N8gQ/exec";
+const PAYMENT_MODE = "BILLPLZ"; // manual mode no longer needed now that Billplz is approved
+
+/* ========================================================= */
+
+let formData = {};
+let registrationId = null;
+
+// If Billplz just redirected the participant back here after paying, look up their status.
+window.addEventListener("load", () => {
+  const params = new URLSearchParams(window.location.search);
+  const regId = params.get("regId");
+  if (regId) {
+    registrationId = regId;
+    document.getElementById("confirmRegId").textContent = regId;
+    document.getElementById("confirmSub").textContent = "Checking your payment status...";
+    goTo("confirm");
+    pollPaymentStatus(regId, 0);
+  }
+});
+
+function pollPaymentStatus(regId, attempt){
+  callBackend({ action:"lookup", registrationId: regId }).then(res=>{
+    if(res.ok && res.paymentStatus === "Confirmed"){
+      document.getElementById("confirmSub").textContent = "Your payment is confirmed! Check your inbox for your QR code.";
+      formData.fullName = res.fullName;
+      formData.tshirtSize = res.tshirtSize;
+      renderConfirmDetails(true);
+    } else if (attempt < 6) {
+      // Billplz's webhook can take a few seconds to arrive — retry briefly before giving up.
+      setTimeout(()=> pollPaymentStatus(regId, attempt + 1), 3000);
+    } else {
+      document.getElementById("confirmSub").textContent = "Payment received — we're still confirming it on our end. Your confirmation email with QR code will arrive shortly.";
+    }
+  }).catch(()=>{
+    document.getElementById("confirmSub").textContent = "Payment received — we're confirming it now. Your confirmation email with QR code will arrive shortly.";
+  });
+}
+
+function goTo(step){
+  ["landing","register","payment","confirm"].forEach(s=>{
+    document.getElementById("screen-"+s).classList.toggle("hide", s!==step);
+  });
+  document.querySelectorAll("#stepTrack span[data-step]").forEach(el=>{
+    el.classList.toggle("on", el.dataset.step===step);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// T-shirt size picker
+document.getElementById("tshirtRow").addEventListener("click",(e)=>{
+  if(!e.target.classList.contains("tshirt-opt")) return;
+  document.querySelectorAll(".tshirt-opt").forEach(o=>o.classList.remove("sel"));
+  e.target.classList.add("sel");
+});
+
+// Show/hide "specify condition" field
+document.querySelector('select[name="hasCondition"]').addEventListener("change",(e)=>{
+  document.getElementById("conditionDetailField").style.display = e.target.value==="Yes" ? "block":"none";
+});
+
+function setError(fieldName, msg){
+  const wrap = document.querySelector(`.field[data-f="${fieldName}"]`);
+  if(!wrap) return;
+  wrap.classList.toggle("invalid", !!msg);
+  wrap.querySelector(".err").textContent = msg || "";
+}
+
+function validateForm(){
+  let ok = true;
+  const f = document.getElementById("regForm");
+  const reqFields = ["fullName","age","icNumber","email","contactNumber","emergencyName","emergencyNumber"];
+  reqFields.forEach(name=>{
+    const val = f[name].value.trim();
+    if(!val){ setError(name,"This field is required"); ok=false; } else { setError(name,""); }
+  });
+  const email = f["email"].value.trim();
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setError("email","Enter a valid email"); ok=false; }
+  const ic = f["icNumber"].value.trim();
+  if(ic && !/^\d{6}-?\d{2}-?\d{4}$/.test(ic)){ setError("icNumber","Format: 930101-01-1234"); ok=false; }
+  if(!document.getElementById("agreeTerms").checked){
+    alert("Please agree to the Terms & Conditions to continue.");
+    ok=false;
+  }
+  return ok;
+}
+
+document.getElementById("regForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  if(!validateForm()) return;
+  const f = e.target;
+  formData = {
+    fullName: f.fullName.value.trim(),
+    age: f.age.value.trim(),
+    icNumber: f.icNumber.value.trim(),
+    email: f.email.value.trim(),
+    contactNumber: f.contactNumber.value.trim(),
+    emergencyName: f.emergencyName.value.trim(),
+    emergencyNumber: f.emergencyNumber.value.trim(),
+    hasCondition: f.hasCondition.value,
+    conditionDetail: f.conditionDetail.value.trim(),
+    tshirtSize: document.querySelector(".tshirt-opt.sel").dataset.size,
+    amount: 50.00
+  };
+
+  const btn = document.getElementById("continueBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Saving your details...';
+
+  // Register participant (status = pending) BEFORE payment, so client never loses a lead
+  callBackend({ action:"register", ...formData })
+    .then(res=>{
+      registrationId = res.registrationId || ("CFR2026-" + Date.now().toString().slice(-6));
+      document.getElementById("payRegId").textContent = registrationId;
+      goTo("payment");
+    })
+    .catch(err=>{
+      alert("Something went wrong saving your registration. Please try again.\n" + err);
+    })
+    .finally(()=>{
+      btn.disabled = false;
+      btn.innerHTML = "Continue to Payment →";
+    });
+});
+
+function submitBillplzPayment(){
+  const btn = document.getElementById("billplzSubmitBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Redirecting to payment...';
+  // In BILLPLZ mode, this calls your backend to create a Billplz bill and redirect the user to bill_url
+  callBackend({ action:"createBillplzBill", registrationId })
+    .then(res=>{
+      if(res.billUrl){
+        window.location.href = res.billUrl;
+      } else {
+        alert("Payment could not be started: " + (res.error || "Unknown error"));
+        btn.disabled = false;
+        btn.innerHTML = "Pay RM50.00";
+      }
+    })
+    .catch(err=>{
+      alert("Payment could not be started: " + err);
+      btn.disabled = false;
+      btn.innerHTML = "Pay RM50.00";
+    });
+}
+
+function renderConfirmDetails(paid){
+  const d = document.getElementById("confirmDetails");
+  d.innerHTML = `
+    <div><span>Name</span><b>${formData.fullName}</b></div>
+    <div><span>T-Shirt Size</span><b>${formData.tshirtSize}</b></div>
+    <div><span>Event Date</span><b>14 Nov 2026 (Sat)</b></div>
+    <div><span>Venue</span><b>Putrajaya</b></div>
+    <div><span>Status</span><b>${paid ? "Confirmed" : "Pending Verification"}</b></div>
+  `;
+}
+
+function callBackend(payload){
+  if(APPS_SCRIPT_URL.startsWith("PASTE_")){
+    console.warn("APPS_SCRIPT_URL not configured — using local mock response.");
+    return new Promise(resolve=>{
+      setTimeout(()=> resolve({ ok:true, registrationId: "CFR2026-" + Date.now().toString().slice(-6) }), 600);
+    });
+  }
+  return fetch(APPS_SCRIPT_URL, {
+    method:"POST",
+    headers:{ "Content-Type":"text/plain;charset=utf-8" }, // avoids CORS preflight on Apps Script
+    body: JSON.stringify(payload)
+  }).then(r=>r.json());
+}
+</script>
+</body>
+</html>
