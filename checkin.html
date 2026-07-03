@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARRO Fun Run — Check-In Scanner</title>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<style>
+  :root{
+    --ink:#15130f; --paper:#f6f2ea; --orange:#ff5a1f; --orange-dark:#e14812;
+    --green:#1f7a4d; --red:#c23b1f; --amber:#b8790a; --line:rgba(255,255,255,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ink);color:#fff;font-family:'Inter',Arial,sans-serif;min-height:100vh;}
+  .wrap{max-width:480px;margin:0 auto;padding:16px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:6px 4px 16px;}
+  .logo{font-weight:800;font-size:16px;letter-spacing:0.02em;}
+  .logo span{color:var(--orange);}
+  .stats{display:flex;gap:10px;}
+  .stat{background:#1c1a15;border:1px solid var(--line);border-radius:8px;padding:8px 12px;text-align:center;min-width:64px;}
+  .stat .n{font-weight:800;font-size:18px;}
+  .stat .l{font-size:9px;color:#a8a294;text-transform:uppercase;letter-spacing:0.05em;}
+
+  .scan-box{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:1/1;border:2px solid var(--line);}
+  #video{width:100%;height:100%;object-fit:cover;display:block;}
+  .scan-frame{position:absolute;inset:12%;border:2px solid var(--orange);border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,0.35);pointer-events:none;}
+  .scan-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:12px;color:#e8e3d6;background:rgba(0,0,0,0.4);padding:6px;}
+  #canvas{display:none;}
+
+  .manual{margin-top:14px;display:flex;gap:8px;}
+  .manual input{flex:1;padding:12px 14px;border-radius:8px;border:1.5px solid var(--line);background:#1c1a15;color:#fff;font-size:14px;}
+  .manual button{padding:12px 16px;border-radius:8px;border:none;background:var(--orange);color:#fff;font-weight:800;cursor:pointer;}
+
+  .result{margin-top:16px;border-radius:14px;padding:20px;text-align:center;display:none;}
+  .result.show{display:block;animation:pop .2s ease;}
+  @keyframes pop{from{transform:scale(0.95);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .result.ok{background:#12331f;border:1.5px solid var(--green);}
+  .result.warn{background:#3a2a08;border:1.5px solid var(--amber);}
+  .result.bad{background:#3a1410;border:1.5px solid var(--red);}
+  .result .icon{font-size:34px;margin-bottom:6px;}
+  .result .name{font-size:20px;font-weight:800;margin:4px 0;}
+  .result .meta{font-size:13px;color:#cfc9ba;}
+  .result .msg{font-size:13px;margin-top:8px;color:#e8e3d6;}
+
+  .status-line{text-align:center;font-size:12px;color:#8a8477;margin-top:10px;}
+  .camera-off{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:10px;color:#8a8477;font-size:13px;text-align:center;padding:20px;}
+  .btn-start{padding:12px 20px;border-radius:8px;border:none;background:var(--orange);color:#fff;font-weight:800;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">CARRO<span>.</span> Check-In</div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="statConfirmed">–</div><div class="l">Confirmed</div></div>
+      <div class="stat"><div class="n" id="statCheckedIn">–</div><div class="l">Checked In</div></div>
+    </div>
+  </div>
+
+  <div class="scan-box">
+    <video id="video" playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <div class="scan-frame" id="scanFrame"></div>
+    <div class="scan-hint" id="scanHint">Point camera at participant's QR code</div>
+    <div class="camera-off hide" id="cameraOff">
+      <div>Camera access is needed to scan QR codes.</div>
+      <button class="btn-start" onclick="startCamera()">Enable Camera</button>
+    </div>
+  </div>
+
+  <div class="manual">
+    <input type="text" id="manualId" placeholder="Or type Registration ID (e.g. CFR20261001)">
+    <button onclick="submitManual()">Check In</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="icon" id="resultIcon">✓</div>
+    <div class="name" id="resultName">—</div>
+    <div class="meta" id="resultMeta">—</div>
+    <div class="msg" id="resultMsg"></div>
+  </div>
+
+  <div class="status-line" id="statusLine">Ready to scan</div>
+</div>
+
+<script>
+/* ================== CONFIG ================== */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxsTTEtlu7w_zxSvtpnNepfc3vbZE1dHkqnb6bnh8NyTbJKM6DvnurIU8o0HrXThY08zw/exec"; // same URL as index.html
+/* ============================================== */
+
+let stream, video, canvas, ctx, scanning = false, cooldown = false;
+
+window.addEventListener("load", () => {
+  video = document.getElementById("video");
+  canvas = document.getElementById("canvas");
+  ctx = canvas.getContext("2d");
+  startCamera();
+  refreshStats();
+  setInterval(refreshStats, 15000);
+});
+
+function startCamera(){
+  document.getElementById("cameraOff").classList.remove("hide");
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(s=>{
+      stream = s;
+      video.srcObject = s;
+      video.setAttribute("playsinline", true);
+      video.play();
+      document.getElementById("cameraOff").classList.add("hide");
+      scanning = true;
+      requestAnimationFrame(tick);
+    })
+    .catch(err=>{
+      document.getElementById("scanHint").textContent = "Camera unavailable — use manual entry below.";
+      document.getElementById("cameraOff").innerHTML = "Camera access was blocked or unavailable. You can still check participants in using the manual field below.";
+    });
+}
+
+function tick(){
+  if(!scanning) return;
+  if(video.readyState === video.HAVE_ENOUGH_DATA){
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
+    if(code && code.data && !cooldown){
+      handleScan(code.data.trim());
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+function handleScan(regId){
+  cooldown = true;
+  document.getElementById("statusLine").textContent = "Checking " + regId + "...";
+  checkIn(regId).finally(()=>{
+    setTimeout(()=>{ cooldown = false; }, 2500); // avoid re-scanning the same code instantly
+  });
+}
+
+function submitManual(){
+  const val = document.getElementById("manualId").value.trim();
+  if(!val) return;
+  checkIn(val);
+  document.getElementById("manualId").value = "";
+}
+
+function checkIn(regId){
+  return callBackend({ action:"checkIn", registrationId: regId })
+    .then(res=> showResult(res))
+    .catch(err=> showResult({ ok:false, status:"ERROR", message:"Network error — try again: " + err }))
+    .finally(()=> refreshStats());
+}
+
+function showResult(res){
+  const box = document.getElementById("result");
+  const icon = document.getElementById("resultIcon");
+  const name = document.getElementById("resultName");
+  const meta = document.getElementById("resultMeta");
+  const msg = document.getElementById("resultMsg");
+
+  box.className = "result show";
+  if(res.status === "CHECKED_IN"){
+    box.classList.add("ok");
+    icon.textContent = "✓";
+    name.textContent = res.fullName;
+    meta.textContent = "T-Shirt: " + res.tshirtSize + (res.age ? " · Age " + res.age : "");
+    msg.textContent = "Checked in successfully — let them through!";
+    beep(660);
+  } else if(res.status === "ALREADY_CHECKED_IN"){
+    box.classList.add("warn");
+    icon.textContent = "⚠";
+    name.textContent = res.fullName;
+    meta.textContent = "T-Shirt: " + res.tshirtSize;
+    msg.textContent = res.message;
+    beep(440);
+  } else if(res.status === "NOT_PAID"){
+    box.classList.add("bad");
+    icon.textContent = "✕";
+    name.textContent = res.fullName || "Unknown";
+    meta.textContent = "";
+    msg.textContent = res.message;
+    beep(220);
+  } else if(res.status === "NOT_FOUND"){
+    box.classList.add("bad");
+    icon.textContent = "✕";
+    name.textContent = "Not found";
+    meta.textContent = "";
+    msg.textContent = res.message;
+    beep(220);
+  } else {
+    box.classList.add("bad");
+    icon.textContent = "✕";
+    name.textContent = "Error";
+    meta.textContent = "";
+    msg.textContent = res.message || "Something went wrong.";
+    beep(220);
+  }
+  document.getElementById("statusLine").textContent = "Ready to scan next participant";
+}
+
+function refreshStats(){
+  callBackend({ action:"stats" }).then(res=>{
+    if(res.ok){
+      document.getElementById("statConfirmed").textContent = res.confirmed;
+      document.getElementById("statCheckedIn").textContent = res.checkedIn;
+    }
+  }).catch(()=>{});
+}
+
+function beep(freq){
+  try{
+    const ctxA = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctxA.createOscillator();
+    const g = ctxA.createGain();
+    o.frequency.value = freq;
+    o.connect(g); g.connect(ctxA.destination);
+    g.gain.setValueAtTime(0.15, ctxA.currentTime);
+    o.start();
+    o.stop(ctxA.currentTime + 0.15);
+  }catch(e){}
+}
+
+function callBackend(payload){
+  if(APPS_SCRIPT_URL.startsWith("PASTE_")){
+    console.warn("APPS_SCRIPT_URL not configured — using mock response.");
+    return new Promise(resolve=> setTimeout(()=> resolve({ ok:true, status:"CHECKED_IN", fullName:"Test Participant", tshirtSize:"M", age:28 }), 400));
+  }
+  return fetch(APPS_SCRIPT_URL, {
+    method:"POST",
+    headers:{ "Content-Type":"text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  }).then(r=>r.json());
+}
+</script>
+</body>
+</html>
